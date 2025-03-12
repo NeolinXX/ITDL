@@ -1,14 +1,15 @@
 clear;
-stressdata = readmatrix('sensor1-2.csv');
-stressdata_matrix = stressdata(:450,:)
-stress_tensor = reshape(trafficdata,30,15,22)
+stressdata = readmatrix('yourfilepath.csv');
+stressdata_matrix = stressdata(:448,:)
+%Here, tensors can be organized into different patterns, with x, y, and z corresponding to three dimensions respectively.
+stress_tensor = reshape(trafficdata,7,64,22)
 A = stress_tensor
-x = 30;
-y = 15;
+x = 7;
+y = 64;
 z = 22;
-N = 2;
-iteration = 1;
-pho=1;
+N = 10;
+iteration = 5;
+pho=0.5;
 beta = 0.8;
 maxitem = 10000;
 lm_1 = 1e-8;
@@ -25,23 +26,23 @@ for n = 1:1:N
     Trsquare = 0;
     TMAE = 0;
     for jj = 1:1:iteration
-        k=0.3+0.05*n;           % 缺失率
-        k2=1-k;             % 非0率
+        k=0.3+0.05*n; 
+        k2=1-k; 
         W_S= randsrc(x,y*z,[1 0;k2 k]);
-        W=reshape(W_S,x,y,z);   % W为残缺矩阵
+        W=reshape(W_S,x,y,z); 
         W_r=ones(x,y,z);
         W_r=W_r-W;
-        A_r=tensor(A.*W_r);      % A_r为残缺位置对应的真值
-        A_q=tensor(A.*W);        % A_q为残缺张量
+        A_r=tensor(A.*W_r); 
+        A_q=tensor(A.*W); 
 
-        A = tensor(A);               % 变为Tensor张量
-        A1 = tenmat(A_q,1);          %张量沿mode-n展开   A1-A4为矩阵
+        A = tensor(A); 
+        A1 = tenmat(A_q,1);
         A2 = tenmat(A_q,2);
         A3 = tenmat(A_q,3);
 
-        [UU1, TT1, VV1] = svdsketch(A1.data,0.5);      % 奇异值分解
-        [UU2, TT2, VV2] = svdsketch(A2.data,0.7);
-        [UU3, TT3, VV3] = svdsketch(A3.data);
+        [UU1, TT1, VV1] = svdsketch(A1.data,0.57);
+        [UU2, TT2, VV2] = svdsketch(A2.data,0.2);
+        [UU3, TT3, VV3] = svdsketch(A3.data,0.57);
 
         D1 = diag(TT1);
         r1 = 1;
