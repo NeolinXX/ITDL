@@ -2,7 +2,7 @@ clear;
 stressdata = readmatrix('yourfilepath.csv');
 stressdata_matrix = stressdata(:448,:)
 %Here, tensors can be organized into different patterns, with x, y, and z corresponding to three dimensions respectively.
-stress_tensor = reshape(trafficdata,7,64,22)
+stress_tensor = reshape(stressdata_matrix,7,64,22)
 A = stress_tensor
 x = 7;
 y = 64;
